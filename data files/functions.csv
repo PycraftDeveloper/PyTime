@@ -1,0 +1,7 @@
+#BUILT_IN,abs,INT
+#BUILT_IN,aiter,NONE
+BUILT_IN,all,BOOL*50
+
+BUILT_IN,print,FLOAT
+
+random,random,NONE
