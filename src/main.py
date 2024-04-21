@@ -40,16 +40,16 @@ functions_path = f"{base_path}{SEPARATOR}data files{SEPARATOR}functions.csv"
 results_path = f"{base_path}{SEPARATOR}results{SEPARATOR}{formatted_version}_{platform.system()}.md"
 
 header = "# PyTime\nA Github repository testing just how fast different Python functions are!\n\n## Results"
-header += f"\n\nRunning PyTest using Python {platform.python_version()} on {platform.system()}"
-header += "\n\n| Function | Mean execution time of 1,000,000 runs, measured in seconds, s | Shortest execution time, measured in seconds, s | Longest execution time, measured in seconds, s | Range in execution time, measured in seconds, s | Normalized execution time |"
-header += "\n| --- | --- | --- | --- | --- | --- |"
+header += f"\n\nRunning PyTime using Python {platform.python_version()} on {platform.system()}"
 
 with open(results_path, "w") as out_file:
     out_file.write(header)
 
 delay = 1/50_000
+RUNS = 1_000_000
 
 test_data = []
+module_name_header = ""
 with open(functions_path, 'r') as file:
     for line in file.readlines():
         if line.startswith("#"):
@@ -60,6 +60,18 @@ with open(functions_path, 'r') as file:
             function_name = function_data[1]
             args = function_data[2]
 
+            if module_name_header != module_name:
+                if module_name == "BUILT_IN":
+                    header = "\n\n### Standard Library"
+                else:
+                    header = f"\n\n### {module_name}"
+                header += "\n\n| Function | Mean execution time of 1,000,000 runs, measured in seconds, s | Shortest execution time, measured in seconds, s | Longest execution time, measured in seconds, s | Range in execution time, measured in seconds, s | Normalized execution time |"
+                header += "\n| --- | --- | --- | --- | --- | --- |"
+
+                with open(results_path, "a") as out_file:
+                    out_file.write(header)
+
+                module_name_header = module_name
             if module_name == "BUILT_IN":
                 module = builtins
 
@@ -70,7 +82,7 @@ with open(functions_path, 'r') as file:
             total_execution_time = 0
             range_min = [0, float("inf")]
             range_max = [0, 0]
-            for iter in range(1_000_000):
+            for iter in range(RUNS):
                 test_args = []
                 for arg in args.split(","):
                     arg = arg.strip()
@@ -98,7 +110,7 @@ with open(functions_path, 'r') as file:
                 total_execution_time += run_delta
                 time.sleep(delay)
 
-            mean_execution_time = total_execution_time / 1_000_000
+            mean_execution_time = total_execution_time / RUNS
             execution_range = range_max[1] - range_min[1]
             n = (mean_execution_time - range_min[1])/execution_range
             result = f"\n| {function_name} | {mean_execution_time} | {range_min[1]} | {range_max[1]} | {execution_range} | {n} |"
