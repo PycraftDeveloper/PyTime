@@ -3,6 +3,8 @@ A Github repository testing just how fast different Python functions are!
 
 ## Testing Methodology
 
+This is a minimal example of the testing methodology.
+
 ```
 import time
 
