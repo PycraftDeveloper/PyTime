@@ -3,7 +3,9 @@ import time
 import builtins
 import string
 import random
-import json
+import platform
+
+run_time = time.perf_counter()
 
 SEPARATOR = os.sep
 
@@ -18,24 +20,32 @@ def data_filler(array, arg):
     if arg == "NONE":
         pass
     elif arg == "STR":
-        array.append(random_word(10))
+        array.append(random_word(5))
     elif arg == "BOOL":
         array.append(random.choice([True, False]))
     elif arg == "FLOAT":
         array.append(random.choice([-1, 1]) * round(random.random(), 5))
     elif arg == "INT":
         array.append(random.choice([-1, 1]) * random.randint(10000, 99999))
+    elif arg == "POSINT":
+        array.append(random.randint(10000, 99999))
+    elif arg == "NEGINT":
+        array.append(random.randint(-99999, -10000))
     return array
 
 base_path = up(up(__file__))
 
+formatted_version = platform.python_version().replace(".", "-")
 functions_path = f"{base_path}{SEPARATOR}data files{SEPARATOR}functions.csv"
-results_path = f"{base_path}{SEPARATOR}data files{SEPARATOR}results.csv"
+results_path = f"{base_path}{SEPARATOR}results{SEPARATOR}{formatted_version}_{platform.system()}.md"
 
-try:
-    os.remove(results_path)
-except FileNotFoundError:
-    pass
+header = "# PyTime\nA Github repository testing just how fast different Python functions are!\n\n## Results"
+header += f"\n\nRunning PyTest using Python {platform.python_version()} on {platform.system()}"
+header += "\n\n| Function | Mean execution time of 1,000,000 runs, measured in seconds, s | Shortest execution time, measured in seconds, s | Longest execution time, measured in seconds, s | Range in execution time, measured in seconds, s | Normalized execution time |"
+header += "\n| --- | --- | --- | --- | --- | --- |"
+
+with open(results_path, "w") as out_file:
+    out_file.write(header)
 
 delay = 1/50_000
 
@@ -58,7 +68,9 @@ with open(functions_path, 'r') as file:
             function = getattr(module, function_name)
 
             total_execution_time = 0
-            for _ in range(10_000_000):
+            range_min = [0, float("inf")]
+            range_max = [0, 0]
+            for iter in range(1_000_000):
                 test_args = []
                 for arg in args.split(","):
                     arg = arg.strip()
@@ -72,16 +84,26 @@ with open(functions_path, 'r') as file:
                             time.sleep(delay)
                         test_args.append(element)
                     else:
-                        test_args.append(data_filler(test_args, arg))
+                        test_args = data_filler(test_args, arg)
 
                 start = time.perf_counter()
                 function(*test_args)
                 end = time.perf_counter()
-                total_execution_time += end - start
+                run_delta = end - start
+                if run_delta < range_min[1]:
+                    range_min = [iter, run_delta]
+
+                if run_delta > range_max[1]:
+                    range_max = [iter, run_delta]
+                total_execution_time += run_delta
                 time.sleep(delay)
 
-            mean_execution_time = total_execution_time / 10_000_000
+            mean_execution_time = total_execution_time / 1_000_000
+            execution_range = range_max[1] - range_min[1]
+            n = (mean_execution_time - range_min[1])/execution_range
+            result = f"\n| {function_name} | {mean_execution_time} | {range_min[1]} | {range_max[1]} | {execution_range} | {n} |"
             with open(results_path, "a") as out_file:
-                result = json.dumps(f"{function_name},{mean_execution_time}")
-                out_file.write(result+"\n")
-            print(f"Execution time: {total_execution_time/10_000_000}")
+                out_file.write(result)
+
+            print(result)
+            print(f"Running for: {time.perf_counter()-run_time} seconds")

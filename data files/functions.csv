@@ -1,7 +1,34 @@
-#BUILT_IN,abs,INT
+BUILT_IN,abs,INT
 #BUILT_IN,aiter,NONE
-BUILT_IN,all,BOOL*50
+BUILT_IN,all,BOOL*5
+BUILT_IN,any,BOOL*5
+#BUILT_IN,anext,NONE
+BUILT_IN,ascii,STR
+BUILT_IN,bin,INT
+BUILT_IN,bool,BOOL
+#BUILT_IN,breakpoint,NONE
+#BUILT_IN,bytearray,NONE
+#BUILT_IN,bytes,NONE
+#BUILT_IN,callable,NONE
+BUILT_IN,chr,POSINT
+#BUILT_IN,classmethod,NONE
+#BUILT_IN,compile,NONE
+#BUILT_IN,complex,NONE
+#BUILT_IN,delattr,NONE
+#BUILT_IN,dict,NONE
+#BUILT_IN,dir,NONE
+#BUILT_IN,divmod,NONE
+#BUILT_IN,enumerate,NONE
+#BUILT_IN,eval,NONE
+#BUILT_IN,exec,NONE
+#BUILT_IN,filter,NONE
+#BUILT_IN,float,NONE
+#BUILT_IN,format,NONE
+#BUILT_IN,frozenset,NONE
+#BUILT_IN,getattr,NONE
+#BUILT_IN,globals,NONE
+#BUILT_IN,hasattr,NONE
 
-BUILT_IN,print,FLOAT
+BUILT_IN,print,STR
 
 random,random,NONE
