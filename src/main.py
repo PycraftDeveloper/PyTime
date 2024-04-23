@@ -31,12 +31,14 @@ def data_filler(array, arg):
         array.append(random.randint(10000, 99999))
     elif arg == "NEGINT":
         array.append(random.randint(-99999, -10000))
+    else:
+        array.append(arg)
     return array
 
 base_path = up(up(__file__))
 
 formatted_version = platform.python_version().replace(".", "-")
-functions_path = f"{base_path}{SEPARATOR}data files{SEPARATOR}functions.csv"
+functions_path = f"{base_path}{SEPARATOR}data files{SEPARATOR}functions.txt"
 results_path = f"{base_path}{SEPARATOR}results{SEPARATOR}{formatted_version}_{platform.system()}.md"
 
 header = "# PyTime\nA Github repository testing just how fast different Python functions are!\n\n## Results"
