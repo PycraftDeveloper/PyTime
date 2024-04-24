@@ -7,10 +7,10 @@ BUILT_IN,ascii,STR
 BUILT_IN,bin,INT
 BUILT_IN,bool,BOOL
 #BUILT_IN,breakpoint,NONE
-BUILT_IN,bytearray,STR,"utf-8"
-BUILT_IN,bytes,STR,"utf-8"
+BUILT_IN,bytearray,STR,utf-8
+BUILT_IN,bytes,STR,utf-8
 #BUILT_IN,callable,NONE
-BUILT_IN,chr,POSINT
+BUILT_IN,chr,POS_INT
 #BUILT_IN,classmethod,NONE
 #BUILT_IN,compile,NONE
 BUILT_IN,complex,INT,INT
