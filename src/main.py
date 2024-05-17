@@ -45,8 +45,10 @@ def random_word(length):
    return ''.join(random.choice(letters) for i in range(length))
 
 def data_filler(array, arg):
-    if arg == "NONE":
+    if arg == "NULL":
         pass
+    elif arg == "NONE":
+        array.append(None)
     elif arg == "STR":
         array.append(random_word(5))
     elif arg == "BOOL":
@@ -59,8 +61,13 @@ def data_filler(array, arg):
         array.append(random.randint(10000, 99999))
     elif arg == "NEG_INT":
         array.append(random.randint(-99999, -10000))
+    elif arg == "ANY":
+        return data_filler(array, random.choice(["NULL", "NONE", "STR", "BOOL", "FLOAT", "INT", "POS_INT", "NEG_INT"]))
+    elif arg == "ANY_EXCLUDING_NULL":
+        return data_filler(array, random.choice(["NONE", "STR", "BOOL", "FLOAT", "INT", "POS_INT", "NEG_INT"]))
     else:
         array.append(arg)
+
     return array
 
 base_path = up(up(__file__))
